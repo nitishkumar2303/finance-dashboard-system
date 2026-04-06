@@ -4,6 +4,7 @@ import helmet from 'helmet';
 
 //routes
 import authRoute from './routes/auth.routes.js';
+import recordRoute from './routes/record.routes.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 //routing
 app.use('/api/auth' , authRoute);
+app.use('/api/records', recordRoute);
 
 
 app.get('/api/health', (req, res) => {

@@ -1,26 +1,28 @@
-import Record from "../models/record";
+import Record from "../models/Record.model.js"; 
 
 export const createRecord = async (req, res) => {
   try {
-    const [amount, type, category, date, description] = req.body;
+    
+    const { amount, type, category, date, description } = req.body; 
+    
     const record = await Record.create({
       amount,
       type,
       category,
       date,
       description,
-      createdBy: req.user,
+      createdBy: req.user.id, 
     });
 
     res.status(201).send({ success: true, record: record });
   } catch (err) {
-    res.status(500).json({ success: false, error: err });
+    res.status(500).json({ success: false, error: err.message });
   }
 };
 
 export const getRecord = async (req, res) => {
   try {
-    const { type, category } = req.body;
+    const { type, category } = req.body; 
     let query = {};
 
     if (type) query.type = type;
@@ -28,25 +30,28 @@ export const getRecord = async (req, res) => {
 
     const records = await Record.find(query).sort({ date: -1 });
 
-    res
-      .status(200)
-      .send({ success: true, count: records.length, records: records });
+    res.status(200).send({ success: true, count: records.length, records: records });
   } catch (err) {
-    res.status(500).json({ success: false, error: err });
+    res.status(500).json({ success: false, error: err.message });
   }
 };
 
 export const updateRecord = async (req, res) => {
   try {
     let record = await Record.findById(req.params.id);
-    if (!record)
-      res.status(404).json({ success: false, error: "No record found" });
+    if (!record) {
+      return res.status(404).json({ success: false, error: "No record found" }); 
+    }
+    
     record = await Record.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
+    
+    
+    res.status(200).json({ success: true, record }); 
   } catch (err) {
-    res.status(500).json({success: false, error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 };
 
@@ -55,13 +60,11 @@ export const deleteRecord = async (req, res) => {
     const record = await Record.findById(req.params.id);
 
     if (!record)
-      return res
-        .status(404)
-        .send({ success: false, error: "No record found." });
+      return res.status(404).send({ success: false, error: "No record found." });
 
     await record.deleteOne();
-    res.status(200).send({ success: true, record: record });
+    res.status(200).send({ success: true, message: "Record removed" }); 
   } catch (err) {
-    res.status(500).json({ success: false, error: err });
+    res.status(500).json({ success: false, error: err.message });
   }
 };

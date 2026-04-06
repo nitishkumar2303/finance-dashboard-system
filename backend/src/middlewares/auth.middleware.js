@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+import User from "../models/User.model.js"; 
 
 export const protect = async (req, res, next) => {
   let token;
@@ -11,7 +11,8 @@ export const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
 
-      const decoded = jwt.verify(toke, process.env.JWT_SECRET);
+     
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); 
 
       req.user = await User.findById(decoded.id).select("-password");
 
@@ -38,7 +39,6 @@ export const authorizeRoles = (...roles) => {
         message: `Forbidden:'${req.user.role}' is not allowed to access this resource`,
       });
     }
-
     next();
   };
 };

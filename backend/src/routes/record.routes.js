@@ -3,16 +3,17 @@ import {
   createRecord,
   getRecord,
   deleteRecord,
-    updateRecord,
-} from "../controllers/recordController.js";
-import { protect, authenticate } from "../middleware.js";
-import { authorizeRoles } from "../middlewares/auth.middleware.js";
+  updateRecord,
+} from "../controllers/record.controller.js"; 
+import { protect, authorizeRoles } from "../middlewares/auth.middleware.js"; 
 
 const router = express.Router();
 
 router.use(protect);
 
 router.get("/", getRecord);
-router.post("/", authorizeRoles("ADMIN", "ANALYST"), getRecord);
-router.delete("/", authorizeRoles("ADMIN"), deleteRecord);
+router.post("/", authorizeRoles("ADMIN", "ANALYST"), createRecord); 
+router.delete("/:id", authorizeRoles("ADMIN"), deleteRecord); 
 router.put("/:id", authorizeRoles("ADMIN"), updateRecord);
+
+export default router; // FIX: Added the missing export!

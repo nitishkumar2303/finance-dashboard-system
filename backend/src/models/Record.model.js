@@ -37,10 +37,9 @@ const RecordSchema = new mongoose.Schema(
   },
 );
 
-//indexing based on type and date in ascending and descending order
-recordSchema.index({ type: 1, date: -1 });
-//indexing based on user who created the Record
-recordSchema.index({ createdBy: 1 });
+
+RecordSchema.index({ type: 1, date: -1 });
+RecordSchema.index({ createdBy: 1 });
 
 const Record = mongoose.model("Record", RecordSchema);
 export default Record;
