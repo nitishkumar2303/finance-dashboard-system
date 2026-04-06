@@ -24,6 +24,15 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
       role: role || "VIEWER",
     });
+
+    res.status(201).json({
+      success: true,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id.toString()),
+    });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
   }
